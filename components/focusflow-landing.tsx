@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, Brain, Check, Clock3, Menu, Moon, Sparkles, Sun, Target, X } from 'lucide-react'
 
 const schedule = [
@@ -16,6 +16,27 @@ const colorClasses: Record<string, string> = { blue: 'bg-blue-500/10 text-blue-7
 export function FocusFlowLanding() {
   const [dark, setDark] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [secretFound, setSecretFound] = useState(false)
+  const secretSequence = useRef<string[]>([])
+
+  useEffect(() => {
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
+    const handleKeyDown = (event: KeyboardEvent) => {
+      secretSequence.current = [...secretSequence.current, event.key].slice(-konamiCode.length)
+      if (secretSequence.current.every((key, index) => key.toLowerCase() === konamiCode[index].toLowerCase())) {
+        setSecretFound(true)
+        secretSequence.current = []
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  useEffect(() => {
+    if (!secretFound) return
+    const timeout = window.setTimeout(() => setSecretFound(false), 3000)
+    return () => window.clearTimeout(timeout)
+  }, [secretFound])
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)
@@ -29,6 +50,7 @@ export function FocusFlowLanding() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
+      {secretFound && <div role="status" aria-live="polite" className="fixed inset-x-4 top-4 z-50 mx-auto max-w-md rounded-2xl border border-primary/20 bg-card px-4 py-3 text-center text-sm font-medium text-foreground shadow-xl shadow-primary/20 sm:inset-x-auto sm:right-6 sm:top-6"><span className="text-primary">You found the secret!</span> Here&apos;s 10% off your first month 🎉</div>}
       <header className="relative z-20 border-b border-border/60 bg-background/85 backdrop-blur-xl">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 lg:px-8" aria-label="Main navigation">
           <a href="#top" className="flex items-center gap-2 font-semibold tracking-tight"><span className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground"><Brain className="size-4" /></span>FocusFlow</a>
