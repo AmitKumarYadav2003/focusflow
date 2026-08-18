@@ -1,6 +1,9 @@
 import { Analytics } from '@vercel/analytics/next'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+
+const displayFont = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakarta' })
 
 export const metadata: Metadata = {
   title: 'FocusFlow — Your syllabus, turned into a plan',
@@ -40,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-background">
-      <body className="antialiased">
+      <body className={`${displayFont.variable} antialiased`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
