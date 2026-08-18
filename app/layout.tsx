@@ -1,9 +1,9 @@
 import { Analytics } from '@vercel/analytics/next'
-import { Plus_Jakarta_Sans } from 'next/font/google'
+import { Geist } from 'next/font/google'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
-const displayFont = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-jakarta' })
+const displayFont = Geist({ subsets: ['latin'], variable: '--font-geist', display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'FocusFlow — Your syllabus, turned into a plan',
